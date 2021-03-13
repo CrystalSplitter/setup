@@ -101,17 +101,6 @@ export LANG=en_GB.UTF-8
 # ---------------------------------------------------------------------
 # ENV EDITS ON SHELL 
 
-# Edit path
-export PATH="$HOME/bin:/snap/bin:$HOME/.sdkman/candidates/kotlin/current/bin:$HOME/.cargo/bin:$PATH"
-export PATH="$HOME/.cabal/bin:$PATH"
-export PATH="$HOME/.local/bin:$PATH"
-export fpath=("$HOME/.zfunctions" $fpath)
-export fpath=($fpath "$HOME/.zsh/pure")
-
-[[ -s "/home/crystal/.sdkman/bin/sdkman-init.sh" ]] \
-    && source "/home/crystal/.sdkman/bin/sdkman-init.sh"
-
-
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
 __conda_setup="$('/home/crystal/anaconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
@@ -133,6 +122,34 @@ unset __conda_setup
 # ghc initialize
 [ -f ~/.ghcup/env ] && source ~/.ghcup/env
 
+# Edit path
+
+__prepend_to_path_if_exists () {
+    local p="$1"
+    [[ -d "$p" ]] && export PATH="$p:$PATH"
+}
+
+__append_to_path_if_exists () {
+    local p="$1"
+    [[ -d "$p" ]] && export PATH="$PATH:$p"
+}
+
+__append_to_path_if_exists '/snap/bin'
+__prepend_to_path_if_exists "$HOME/.cabal/bin"
+__prepend_to_path_if_exists "$HOME/.cargo/bin"
+__prepend_to_path_if_exists "$HOME/.sdkman/candidates/kotlin/current/bin"
+__prepend_to_path_if_exists "$HOME/.local/bin"
+__prepend_to_path_if_exists "$HOME/bin"
+
+#export PATH="$HOME/bin:/snap/bin:$HOME/.sdkman/candidates/kotlin/current/bin:$HOME/.cargo/bin:$PATH"
+#export PATH="$HOME/.cabal/bin:$PATH"
+#export PATH="$HOME/.local/bin:$PATH"
+export fpath=("$HOME/.zfunctions" $fpath)
+export fpath=($fpath "$HOME/.zsh/pure")
+
+[[ -s "/home/crystal/.sdkman/bin/sdkman-init.sh" ]] \
+    && source "/home/crystal/.sdkman/bin/sdkman-init.sh"
+
 # ---------------------------------------------------------------------
 # Aliases
 
@@ -143,6 +160,7 @@ alias ls="ls -a --color='auto'"
 export T="/media/crystal/tower_1TB"
 
 eval $(keychain -q --eval "$HOME/.ssh/id_ed25519")
+
 
 # ---------------------------------------------------------------------
 # Oh-My-Zsh Prompt Start
