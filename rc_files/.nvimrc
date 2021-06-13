@@ -3,36 +3,35 @@ call plug#begin('~/.local/share/nvim/plugged')
 "Plug 'honza/vim-snippets'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
-Plug 'mileszs/ack.vim'
-Plug 'nvie/vim-flake8'
+"Plug 'mileszs/ack.vim'
+"Plug 'nvie/vim-flake8'
 Plug 'scrooloose/nerdtree'
 "Plug 'SirVer/ultisnips'
-Plug 'tpope/vim-fugitive'
-Plug 'vim-airline/vim-airline'
-Plug 'christoomey/vim-tmux-navigator'
+"Plug 'tpope/vim-fugitive'
+"Plug 'vim-airline/vim-airline'
+"Plug 'christoomey/vim-tmux-navigator'
+Plug 'sheerun/vim-polyglot'
+Plug 'Yggdroot/indentLine'
 
 """ Language Specific Plugins
 
-Plug 'Vimjas/vim-python-pep8-indent'
-Plug 'rhysd/vim-clang-format'
-Plug 'bfrg/vim-cpp-modern'
-"Plug 'neovimhaskell/haskell-vim'
-Plug 'meck/vim-brittany'
-
-
+"Plug 'Vimjas/vim-python-pep8-indent'
+"Plug 'rhysd/vim-clang-format'
+"Plug 'bfrg/vim-cpp-modern', {'on': 'cpp'}
+"Plug 'meck/vim-brittany', {'on': 'haskell'}
 """ Language Completion / Intelligence Plugins
 
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 "Plug '~/.config/nvim/maninstall_plugins/dbext_2600'
-Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-"Plug 'sheerun/vim-polyglot'
+"Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 
 """ Colour Scheme Plugins
 
-Plug 'flazz/vim-colorschemes'
-Plug 'sonph/onehalf', {'rtp': 'vim/'}
-Plug 'ericcurtin/CurtineIncSw.vim'
+"Plug 'flazz/vim-colorschemes'
+"Plug 'sonph/onehalf', {'rtp': 'vim/'}
+"Plug 'ericcurtin/CurtineIncSw.vim'
+Plug 'sainnhe/sonokai'
 call plug#end()
 
 """ Colour Schemes ----------------------------------------------------
@@ -40,7 +39,8 @@ set t_Co=256
 
 "colorscheme panic
 "colorscheme onehalfdark
-colorscheme pencil
+"colorscheme pencil
+colorscheme sonokai
 
 set background=dark
 if exists('+termguicolors')
@@ -48,6 +48,15 @@ if exists('+termguicolors')
   let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
   set termguicolors
 endif
+
+""" Set up airline ----------------------------------------------------
+let g:airline_powerline_fonts = 1
+
+""" Set up indentLine -------------------------------------------------
+" https://github.com/Yggdroot/indentLine
+let g:indentLine_color_gui = '#53638F'
+let g:indentLine_char = '›'
+
 """ -------------------------------------------------------------------
 
 """Turn off python 2
@@ -93,6 +102,9 @@ autocmd FileType python nnoremap <leader>f :0,$!yapf<Cr>
 autocmd FileType haskell nnoremap <leader>f :Brittany<Cr>
 let g:brittany_on_save = 0
 
+" By default, use the Plug CoC reformat commands with <leader>f
+nmap <leader>f  <Plug>(coc-format)
+
 " Set up prettier JS hotkey
 autocmd FileType javascript,javascriptreact nnoremap <leader>f :silent %!npx -q prettier --stdin-filepath %<CR>
 
@@ -135,33 +147,15 @@ function! s:show_documentation()
   endif
 endfunction
 
-" Tab to accept autocomplete.
+" Shift tab to accept autocomplete.
 inoremap <silent><expr> <S-tab> pumvisible() ? coc#_select_confirm() : "\<C-g>u\<CR>"
 
-"let g:LanguageClient_serverCommands = {
-"    \ 'cpp': ['tcp://127.0.0.1:50505'],
-"    \ }
-"nnoremap <F5> :call LanguageClient_contextMenu()<CR>
-"let g:deoplete#enable_at_startup = 1
-"
-"let g:LanguageClient_serverStderr = '/tmp/clangd.stderr'
-
-"function SetLSPShortcuts()
-"  " ...
-"  " Previous bindings
-"  " ...
-"  nnoremap <leader>ll :call LanguageClient#debugInfo()<CR>
-"endfunction()
-
-" Custom highlights for language search text.
-"hi ALEError ctermfg=Red
-"hi ALEWarning ctermfg=Yellow
-"hi ALEInfo ctermfg=Grey
-"let g:neomake_error_sign = { 'text': 'E>', 'texthl': 'ALEError' }
-"let g:neomake_warning_sign = { 'text': 'W>', 'texthl': 'ALEWarning' }
-"let g:neomake_info_sign = { 'text': 'I>', 'texthl': 'ALEInfo' }
-"let g:LanguageClient_useVirtualText = "No"
-
+" Use <c-space> to trigger completion.
+if has('nvim')
+  inoremap <silent><expr> <c-space> coc#refresh()
+else
+  inoremap <silent><expr> <c-@> coc#refresh()
+endif
 
 """ -------------------------------------------------------------------
 """ Have better syntax highlighting when curlies in brackets.
@@ -180,6 +174,7 @@ let NERDTreeShowHidden=1
 " By default, flake8 calls are mapped to F7, but this activates it on
 " save.
 autocmd BufWritePost *.py call flake8#Flake8()
+
 
 """ Enable Mouse Support ----------------------------------------------
 set mouse=a

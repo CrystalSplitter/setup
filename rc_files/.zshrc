@@ -159,7 +159,9 @@ alias ls="ls -a --color='auto'"
 # Global constants
 export T="/media/crystal/tower_1TB"
 
-eval $(keychain -q --eval "$HOME/.ssh/id_ed25519")
+export EDITOR='nvim'
+export FZF_DEFAULT_COMMAND="fdfind --type f --hidden --follow --exclude .git"
+#eval $(keychain -q --eval "$HOME/.ssh/id_ed25519")
 
 
 # ---------------------------------------------------------------------
