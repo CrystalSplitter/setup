@@ -6,5 +6,5 @@ This repository contains a collection of setup scripts for rapid installation.
 
 # Grub fixes for AMD GPU & Gigabyte Motherboard
 
-[grub_config/default_grub] shows the grub configuration I use. This is normally located
+[[grub_config/default_grub]] shows the grub configuration I use. This is normally located
 under `/etc/default/grub`.
